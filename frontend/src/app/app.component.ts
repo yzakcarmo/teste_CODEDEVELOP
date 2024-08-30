@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { UserManagementComponent } from './components/user-management/user-management.component';
+import {RouterLink, RouterOutlet} from "@angular/router";
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
+  standalone: true,
+  imports: [UserManagementComponent, RouterOutlet, RouterLink]  // Adicione quaisquer outros componentes necessários aqui
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'user-management';
 }

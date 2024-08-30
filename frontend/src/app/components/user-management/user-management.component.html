@@ -1,0 +1,34 @@
+<div>
+  <h2>User Management</h2>
+  <ul>
+    <li *ngFor="let user of users" (click)="selectUser(user)">
+      {{ user.name }} - {{ user.email }} - {{ user.role }}
+      <button (click)="deleteUser(user.id)">Delete</button>
+    </li>
+  </ul>
+
+  <h3>{{ selectedUser ? 'Edit' : 'Create' }} User</h3>
+  <form (ngSubmit)="saveUser()">
+    <label>
+      Name:
+      <input [(ngModel)]="newUser.name" name="name">
+    </label>
+    <label>
+      Email:
+      <input [(ngModel)]="newUser.email" name="email">
+    </label>
+    <label>
+      Phone:
+      <input [(ngModel)]="newUser.phone" name="phone" type="number">
+    </label>
+    <label>
+      Password:
+      <input [(ngModel)]="newUser.password" name="password" type="password">
+    </label>
+    <label>
+      Role:
+      <input [(ngModel)]="newUser.role" name="role" type="number">
+    </label>
+    <button type="submit">{{ selectedUser ? 'Update' : 'Create' }}</button>
+  </form>
+</div>
