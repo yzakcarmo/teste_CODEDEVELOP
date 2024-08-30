@@ -8,6 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import java.util.Arrays;
+
 @Configuration
 @Profile("test")
 public class TestConfig implements CommandLineRunner {
@@ -19,6 +21,7 @@ public class TestConfig implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         User u1 = new User(null, "Teste", "teste@teste.com", 1122222222, "123", UserRole.DEFAULT);
-        userRepository.save(u1);
+        User u2 = new User(null,"Teste ADM", "testeadm@teste.com", 1122222222, "123", UserRole.ADMIN);
+        userRepository.saveAll(Arrays.asList(u1,u2));
     }
 }
