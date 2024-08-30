@@ -5,6 +5,8 @@ import com.yzakcarmo.backend.repositories.UserRepository;
 import com.yzakcarmo.backend.services.exceptions.ResourceNotFoundException;
 import com.yzakcarmo.backend.services.exceptions.DatabaseException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -43,14 +45,23 @@ public class UserService {
     }
 
     public User update(Long id, User obj) {
-        User entity = repository.getReferenceById(id);
-        updateData(entity, obj);
-        return repository.save(entity);
+        try {
+            User entity = repository.getReferenceById(id);
+            updateData(entity, obj);
+            return repository.save(entity);
+        } catch(EntityNotFoundException e) {
+            throw new ResourceNotFoundException(id);
+        }
     }
 
     public void updateData(User entity, User obj) {
-        entity.setName(obj.getName());
-        entity.setEmail(obj.getEmail());
-        entity.setPhone(obj.getPhone());
+        if(obj.getName() != null && !obj.getName().isEmpty())
+            entity.setName(obj.getName());
+
+        if(obj.getEmail() != null && !obj.getEmail().isEmpty())
+            entity.setEmail(obj.getEmail());
+
+        if(obj.getPhone() != null)
+            entity.setPhone(obj.getPhone());
     }
 }
