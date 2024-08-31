@@ -1,117 +1,101 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { UserFormDialogComponent } from '../user-form-dialog/user-form-dialog.component'; // Atualize o caminho conforme necessário
 import { UserService } from '../../services/user.service';
-import { UserRequest, UserResponse } from '../../models/user.models';
-import {FormsModule} from "@angular/forms";
-import {NgForOf} from "@angular/common";
+import { UserResponse } from '../../models/user.models';
+import {MatToolbar} from "@angular/material/toolbar";
 import {MatCard} from "@angular/material/card";
-import {MatList, MatListItem} from "@angular/material/list";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatLine} from "@angular/material/core";
 import {MatButton, MatIconButton} from "@angular/material/button";
-import {MatInput} from "@angular/material/input";
+import {RouterLink} from "@angular/router";
 import {
-  MatCell, MatCellDef,
+  MatCell,
+  MatCellDef,
   MatColumnDef,
-  MatHeaderCell, MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow, MatRowDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
   MatTable
 } from "@angular/material/table";
 import {MatIcon} from "@angular/material/icon";
-import {MatToolbar} from "@angular/material/toolbar";
-import {RouterLink} from "@angular/router";
+import {MatInput} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
   standalone: true,
   imports: [
-    FormsModule,
-    NgForOf,
+    MatToolbar,
     MatCard,
-    MatList,
-    MatListItem,
-    MatFormField,
-    MatLine,
     MatButton,
-    MatInput,
-    MatLabel,
+    RouterLink,
     MatTable,
     MatColumnDef,
     MatHeaderCell,
-    MatCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
-    MatCellDef,
     MatHeaderCellDef,
-    MatIcon,
+    MatCell,
+    MatCellDef,
     MatIconButton,
-    MatToolbar,
-    RouterLink
+    MatIcon,
+    MatHeaderRow,
+    MatRow,
+    MatHeaderRowDef,
+    MatRowDef,
+    MatInput,
+    FormsModule
   ],
   styleUrls: ['./user-management.component.css']
 })
 export class UserManagementComponent implements OnInit {
   users: UserResponse[] = [];
-  selectedUser: UserResponse | null = null;
-
-  newUser: UserRequest = {
-    name: '',
-    email: '',
-    phone: 0,
-    password: '',
-    role: 0
-  };
-
   displayedColumns: string[] = ['name', 'email', 'role', 'actions'];
+  searchId: string = '';
+  filteredUsers: UserResponse[] = [];
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, public dialog: MatDialog) {}
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.loadUsers();
+  }
+
+  findUser(searchId: string) {
+    if(searchId) {
+      const userId = parseInt(searchId, 10);
+      if (!isNaN(userId)) {
+        this.userService.getUser(userId).subscribe((user: UserResponse) => {
+          this.filteredUsers = user ? [user] : [];
+        });
+      } else {
+        this.filteredUsers = [];
+      }
+    } else {
+      this.filteredUsers = this.users;
+    }
   }
 
   loadUsers() {
     this.userService.getUsers().subscribe((data: UserResponse[]) => {
       this.users = data;
-    }, error => {
-      console.error('Erro ao carregar usuários', error);
+      this.filteredUsers = data;
     });
   }
 
-  selectUser(user: UserResponse): void {
-    this.selectedUser = user;
+  openUserForm(user?: UserResponse) {
+    const dialogRef = this.dialog.open(UserFormDialogComponent, {
+      width: '400px',
+      data: user ? { user } : null
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadUsers(); // Recarrega a lista de usuários após salvar
+      }
+    });
   }
 
-  saveUser(): void {
-    if (this.selectedUser) {
-      // Atualizar usuário existente
-      this.userService.updateUser(this.selectedUser.id, this.newUser)
-        .subscribe(() => this.loadUsers());
-    } else {
-      // Criar novo usuário
-      this.userService.createUser(this.newUser)
-        .subscribe(() => this.loadUsers());
-    }
-
-    this.resetForm();
-  }
-
-  deleteUser(id: number): void {
-    this.userService.deleteUser(id).subscribe(() => this.loadUsers());
-  }
-
-  resetForm(): void {
-    this.selectedUser = null;
-    this.newUser = {
-      name: '',
-      email: '',
-      phone: 0,
-      password: '',
-      role: 0
-    };
+  deleteUser(id: number) {
+    this.userService.deleteUser(id).subscribe(() => {
+      this.loadUsers();
+    });
   }
 }
