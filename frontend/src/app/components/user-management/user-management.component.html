@@ -1,34 +1,77 @@
-<div>
-  <h2>User Management</h2>
-  <ul>
-    <li *ngFor="let user of users" (click)="selectUser(user)">
-      {{ user.name }} - {{ user.email }} - {{ user.role }}
-      <button (click)="deleteUser(user.id)">Delete</button>
-    </li>
-  </ul>
+<div class="main-container">
+  <mat-toolbar color="primary">
+    <span>User Management App</span>
+    <span class="spacer"></span>
+    <button mat-button routerLink="/">Home</button>
+    <button mat-button routerLink="/users">Users</button>
+    <button mat-button routerLink="/settings">Settings</button>
+  </mat-toolbar>
 
-  <h3>{{ selectedUser ? 'Edit' : 'Create' }} User</h3>
-  <form (ngSubmit)="saveUser()">
-    <label>
-      Name:
-      <input [(ngModel)]="newUser.name" name="name">
-    </label>
-    <label>
-      Email:
-      <input [(ngModel)]="newUser.email" name="email">
-    </label>
-    <label>
-      Phone:
-      <input [(ngModel)]="newUser.phone" name="phone" type="number">
-    </label>
-    <label>
-      Password:
-      <input [(ngModel)]="newUser.password" name="password" type="password">
-    </label>
-    <label>
-      Role:
-      <input [(ngModel)]="newUser.role" name="role" type="number">
-    </label>
-    <button type="submit">{{ selectedUser ? 'Update' : 'Create' }}</button>
-  </form>
+  <div class="content">
+    <mat-card class="user-form-card">
+      <h3>{{ selectedUser ? 'Edit' : 'Create' }} User</h3>
+      <form (ngSubmit)="saveUser()" class="user-form">
+        <mat-form-field appearance="fill">
+          <mat-label>Name</mat-label>
+          <input matInput [(ngModel)]="newUser.name" name="name">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput [(ngModel)]="newUser.email" name="email">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Phone</mat-label>
+          <input matInput [(ngModel)]="newUser.phone" name="phone" type="number">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput [(ngModel)]="newUser.password" name="password" type="password">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Role</mat-label>
+          <input matInput [(ngModel)]="newUser.role" name="role" type="number">
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">
+          {{ selectedUser ? 'Update' : 'Create' }}
+        </button>
+      </form>
+    </mat-card>
+
+    <mat-card class="user-table-card">
+      <h2>User Management</h2>
+      <table mat-table [dataSource]="users" class="mat-elevation-z8">
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let user"> {{ user.name }} </td>
+        </ng-container>
+
+        <!-- Email Column -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef> Email </th>
+          <td mat-cell *matCellDef="let user"> {{ user.email }} </td>
+        </ng-container>
+
+        <!-- Role Column -->
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef> Role </th>
+          <td mat-cell *matCellDef="let user"> {{ user.role }} </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Actions </th>
+          <td mat-cell *matCellDef="let user" class="actions-cell">
+            <button mat-icon-button color="warn" (click)="deleteUser(user.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card>
+  </div>
 </div>
