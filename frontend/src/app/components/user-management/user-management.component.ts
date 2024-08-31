@@ -48,7 +48,7 @@ import {FormsModule} from "@angular/forms";
 })
 export class UserManagementComponent implements OnInit {
   users: UserResponse[] = [];
-  displayedColumns: string[] = ['name', 'email', 'role', 'actions'];
+  displayedColumns: string[] = ['id','name', 'email', 'role', 'actions'];
   searchId: string = '';
   filteredUsers: UserResponse[] = [];
 

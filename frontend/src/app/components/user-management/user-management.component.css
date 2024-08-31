@@ -15,13 +15,38 @@ body {
 
 /* Menu */
 mat-toolbar {
-  background-color: red;
+  background-color: cadetblue;
   display: flex;
   justify-content: space-between;
   height: 6vh;
   position: absolute;
   top: 0;
   color: #fff;
+}
+.mat-mdc-card{
+  background-color: white;
+  color:#000  !important;
+  border: none;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: none;
+}
+.mat-mdc-card h2{
+  font-size: 1.5rem;
+  text-align: center;
+}
+#mat-input-0{
+  padding: 10px;
+  border-radius: 50px;
+  border:1px solid;
+  width: 80%;
+  font-size: 18px;
+  color:#c1c1c1;
+  margin: 20px;
+}
+.mat-mdc-table{
+  background-color: #000;
+  margin-top: 2rem;
 }
 mat-toolbar  nav  a {
   display: none !important;
@@ -38,10 +63,8 @@ mat-toolbar  nav  a {
   padding: 20px;
 }
 
-/* Formulário e Tabela */
-.user-form-card, .user-table-card {
+.user-table-card {
   width: 100%;
-  max-width: 800px;
   height: 100%;
 }
 
