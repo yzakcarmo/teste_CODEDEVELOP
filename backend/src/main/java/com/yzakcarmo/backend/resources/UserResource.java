@@ -23,6 +23,18 @@ public class UserResource {
         return ResponseEntity.ok().body(list);
     }
 
+    @GetMapping(value = "/search_name")
+    public ResponseEntity<List<User>> findByName(@RequestParam String name) {
+        List<User> obj = service.findByName(name);
+        return ResponseEntity.ok().body(obj);
+    }
+
+    @GetMapping(value = "/search_role")
+    public ResponseEntity<List<User>> getAllByRole(@RequestParam Integer role) {
+        List<User> obj = service.getAllByRole(role);
+        return ResponseEntity.ok().body(obj);
+    }
+
     @GetMapping(value = "/{id}")
     public ResponseEntity<User> findById(@PathVariable Long id) {
         User obj = service.findById(id);

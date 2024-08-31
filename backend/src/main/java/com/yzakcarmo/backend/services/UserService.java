@@ -30,6 +30,14 @@ public class UserService {
         return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
+    public List<User> findByName(String name) {
+        return repository.findByNameContainingIgnoreCase(name);
+    }
+
+    public List<User> getAllByRole(Integer role) {
+        return repository.getAllByRole(role);
+    }
+
     public User insert(User obj) {
         return repository.save(obj);
     }
